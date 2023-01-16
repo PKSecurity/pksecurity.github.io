@@ -2,7 +2,6 @@
 layout: post
 title:  "2022 Microsoft Teams RCE"
 date:   2023-01-17 00:18:20 +0900
-categories: jekyll update
 ---
 
 Me [(@adm1nkyj1)](https://twitter.com/adm1nkyj1) and jinmo123 of theori[(@jinmo123)](https://twitter.com/jinmo123) participated pwn2own 2022 vancouver but we failed because of time allocation issue
