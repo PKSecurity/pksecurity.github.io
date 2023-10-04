@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "2022 Microsoft Teams RCE"
-date:   2023-01-17 00:18:20 +0900
+title:  "2023 Microsoft Office RCE"
+date:   2023-10-04 14:57:20 +0900
 ---
 
 # Summary
