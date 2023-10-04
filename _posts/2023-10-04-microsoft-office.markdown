@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "2023 Microsoft Office RCE"
+title:  "2023 Microsoft Office XSS"
 date:   2023-10-04 14:57:20 +0900
 ---
 
