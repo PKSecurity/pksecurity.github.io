@@ -4,6 +4,9 @@ title:  "2023 Microsoft Office RCE"
 date:   2023-10-04 14:57:20 +0900
 ---
 
+Found by [@adm1nkyj](https://twitter.com/adm1nkyj1) and [@justlikebono](https://twitter.com/justlikebono)
+
+
 # Summary
 
 In the server, when parsing a video from a link designated by an attacker, a malicious payload included in the video title can trigger an XSS (Cross-site Scripting) attack, allowing the execution of arbitrary Javascript code.
@@ -18,7 +21,7 @@ In the server, when parsing a video from a link designated by an attacker, a mal
 
   Various Office products, including MS Word, allow users to insert desired external videos into documents via the "Online Videos" tab.
 
-![pic1.jpg](office/pic1.jpg)
+![pic1.jpg](/assets/office-rce/pic1.jpg)
 
   When a user plays an external video embedded in a document, Office checks whether the provider of the external video is trustworthy, such as YouTube. This check is performed by applying the following regular expression to the URL.
 
@@ -82,7 +85,7 @@ Host: hubble.officeapps.live.com
 
 1. Click on the Online Videos tab in Word and insert the URL of the malicious video into the document.
 
-![Untitled](office/Untitled.png)
+![Untitled](/assets/office-rce/Untitled.png)
 
 1. Set up a simple web server that allows CORS and responds with malicious javascript, as below. (The example executes calc.exe through the calculator URI Scheme.)
 
@@ -105,7 +108,7 @@ if __name__ == '__main__':
 
 # Demo
 
-[PoC_Public.mp4](office/PoC_Public.mp4)
+[PoC_Public.mp4](/assets/office-rce/PoC_Public.mp4)
 
 # Conclusion
 
