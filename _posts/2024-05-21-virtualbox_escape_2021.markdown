@@ -216,7 +216,7 @@ VirtualBox especially implemented the custom free system on URB.
 
 [2]: We can guess from the field name of `pUrbPool->aLstFreeUrbs`, the Urbs which was freed(removed) is inserted into the array.
 
-[3], [4]:  If [The size of the freed URB obtained by for-each lop](`cbAllocated`) > [The required size] is satisfied, unlink and obtain the URB. That means reusing URB, not calling malloc.
+[3], [4]:  If **\[The size of the freed URB obtained by for-each loop\](`cbAllocated`)** > **[The required size]** is satisfied, unlink and obtain the URB. That means reusing URB, not calling malloc.
 
 [5] If none of the URBs on the freed list satisfy the condition, create(malloc) a new one.
 
