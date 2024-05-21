@@ -82,9 +82,8 @@ static int vmsvgaR3ChangeMode(PVGASTATE pThis, PVGASTATECC pThisCC)
     pThis->last_scr_height = pSVGAState->aScreens[0].cHeight; // [1]
     ...
 }
-```
 
-```C++
+
 static int vmsvgaR3DrawGraphic(PVGASTATE pThis, PVGASTATER3 pThisCC, bool fFullUpdate,
                                bool fFailOnResize, bool reset_dirty, PDMIDISPLAYCONNECTOR *pDrv)
 {
