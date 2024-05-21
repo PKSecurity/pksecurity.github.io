@@ -134,8 +134,8 @@ As result, `cy` is fully-controllable variable as well as due to the lack of val
 *By repeatedly skipping over `cbScanline`(fully-controllable), I was able to overwrite the heap chunks next to `pbDst`*
 
 
-![image](https://hackmd.io/_uploads/H1lo2xFXA.png)
-![image](https://hackmd.io/_uploads/ry7ohltQA.png)
+![image](/assets/virtualbox/poc_1.png)
+![image](/assets/virtualbox/poc_2.png)
 
 ### Leak? URB?
 
