@@ -10,7 +10,9 @@ Found by [@howdays1](https://x.com/howdays1)
 ### Overview
 
 To participate in Pwn2Own 2021, I discoverd a bug in Virtualbox and successfully led it to Guest-To-Host Escape. However, I started preparing too late, and as result, I couldn't submit an application for Pwn2Own. Moreover, just after Pwn2Own, Someone received a CVE fo the vulnerabilty.
+
 Despite this, I'd like to share how I discoverd and exploited the bug because I used only one bug for leaking and exploiting, and the technique wasn't well-known before.
+
 The bug I found was heap-overflow, with no info-leak bug involved. That meant I had to facilitate a leak using only heap-overflow vulnerability. The process was quite interesting.
 
         
@@ -257,7 +259,7 @@ Because the host was Windows at Pwn2Own, I was able to use [LFH](https://illmati
 2. Create URB of size **N** and Free it to insert it into FreeList of URB free management system(though it's not actually freed on NTMalloc).
 3. Using the found Heap-overflow vulnerability, overwrite `cbAllocated` of the freed URB's to a huge value like 0x41414141.
 4. To be allocated next to the free URB, spray `VBoxGuestPropSvc` of size **N**.
-5. Request to create a new URB with a size more than three times larger than **N***.
+5. Request to create a new URB with a size more than three times larger than **N**.
 6. Because the `cbAllocated` value of the freed URB was overwritten to a huge value by [3], even if `vusbUrbPoolAlloc` gets request to the size of [5] which is larger than **N**, the function obtains the freed URB from FreeList.
 7. The pVUsb of the URB is written to ``&URB[cbData = N*3 ([5])]``.
 8. `&URB[N*3]` overlaps with the space of `VBoxGuestPropSvc`, which the guest can read and write freely. Therefore Guest can leak PIE and Heap.
@@ -345,6 +347,7 @@ int HGCMThread::MsgComplete(HGCMMsgCore *pMsg, int32_t result)
 [2]: The flow reaches to `HGCMThread::MsgComplete` from [1]. The `pMsg` in the function is same as `it->mHandle` and, it calls `m_pfnCallback` which is a function pointer.
 
 Using the heap-overflow vulnerability, I could write it->mHandle to an arbitrary value, and the second argument of m_pfnCallback is pMsg (from it->mHandle).
+
 Finally, I succeeded in leading it to a ROP attack.
 
 ### Demo
