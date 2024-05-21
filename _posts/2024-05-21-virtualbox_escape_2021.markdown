@@ -345,7 +345,8 @@ int HGCMThread::MsgComplete(HGCMMsgCore *pMsg, int32_t result)
 
 [2]: The flow reaches to `HGCMThread::MsgComplete` from [1]. The `pMsg` in the function is same as `it->mHandle` and, it calls `m_pfnCallback` which is a function pointer.
 
-Using the heap-overflow vulnerability, I could write it->mHandle to an arbitrary value, and the second argument of m_pfnCallback is pMsg (from it->mHandle). Finally, I succeeded in leading it to a ROP attack.
+Using the heap-overflow vulnerability, I could write it->mHandle to an arbitrary value, and the second argument of m_pfnCallback is pMsg (from it->mHandle).
+Finally, I succeeded in leading it to a ROP attack.
 
 ### Demo
 
