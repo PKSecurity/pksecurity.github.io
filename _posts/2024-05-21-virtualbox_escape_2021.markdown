@@ -1,3 +1,12 @@
+---
+layout: post
+title:  "Virtualbox Guest-To-Host Escape with a Single Vulnerability"
+date:   2024-05-21 14:57:20 +0900
+---
+
+Found by [@howdays1](https://x.com/howdays1)
+
+
 ### Overview
 
 To participate in Pwn2Own 2021, I discoverd a bug in Virtualbox and successfully led it to Guest-To-Host Escape. However, I started preparing too late, and as result, I couldn't submit an application for Pwn2Own. Moreover, just after Pwn2Own, Someone received a CVE fo the vulnerabilty.
